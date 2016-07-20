@@ -100,6 +100,7 @@ public class ListSorterTest {
 		List<Integer> list = new ArrayList<Integer>(Arrays.asList(6, 3, 5, 8, 1, 4, 2, 7));
 
 		List<Integer> res = sorter.topK(4, list, comparator);
+
 		assertThat(res.size(), is(4));
 		assertThat(res.get(0), is(5));
 		assertThat(res.get(1), is(6));

@@ -3,6 +3,7 @@
  */
 package com.flatironschool.javacs;
 
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -64,7 +65,48 @@ public class ListSorter<T> {
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+		if (list.size() <= 1)
+		{
+			return list;
+		}
+
+		int mid = list.size()/2;
+		List<T> first = new ArrayList(list.subList(0, mid));
+		List<T> second = new ArrayList(list.subList(mid, list.size()));
+
+		first= mergeSort(first, comparator);
+		second = mergeSort(second, comparator);
+
+		// Now, merge first and second.
+		int iFirst = 0;
+		int iSecond = 0;
+		
+		List<T> sorted = new ArrayList<T>();
+		while (sorted.size() < list.size()){
+			if (iFirst < first.size() && iSecond < second.size())
+			{
+				if (comparator.compare(first.get(iFirst), second.get(iSecond)) < 0)
+				{
+					sorted.add(first.get(iFirst));
+					iFirst++;
+				} else {
+					sorted.add(second.get(iSecond));
+					iSecond++;
+				}
+			}
+			
+			else if (iFirst < first.size()){
+				sorted.add(first.get(iFirst));
+				iFirst++;
+			}
+		
+			else if (iSecond < second.size()){
+				sorted.add(second.get(iSecond));
+				iSecond++;
+			}
+		}
+
+		return sorted;
 	}
 
 	/**
@@ -76,6 +118,22 @@ public class ListSorter<T> {
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
+		PriorityQueue<T> heap = getHeap(list, comparator);
+		
+		for (int i = 0; i < list.size(); i++){
+			T next = heap.poll();
+			list.set(i, next);
+		}
+	}
+	
+	private PriorityQueue<T> getHeap(List<T> list, Comparator<T> comparator){
+		PriorityQueue<T> heap = new PriorityQueue<T>(list.size(), comparator);
+		
+		for (T element : list){
+			heap.offer(element);
+		}
+		
+		return heap;
 	}
 
 	
@@ -89,8 +147,32 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+		PriorityQueue<T> heap = new PriorityQueue<T>();
+		
+		for (T element : list) 
+		{
+			if (heap.size() < k)
+			{
+				heap.offer(element);
+			}
+			else
+			{
+				T root = (T) heap.peek();
+				if (comparator.compare(element, root) >= 0)
+				{
+					heap.poll();
+					heap.offer(element);
+				}
+			}
+		}
+		
+		List<T> sorted = new ArrayList<T>();
+		
+		for (int i = 0; i < k; i++){
+			sorted.add(heap.poll());
+		}
+		
+		return sorted;
 	}
 
 	
